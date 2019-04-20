@@ -26,5 +26,40 @@ resource "aws_internet_gateway" "this" {
 }
 
 ## NAT ##
+#resource "aws_nat_gateway" "this" {
+#  allocation_id = "${}"
+#  subnet_id = "${}"
+#  depends_on = ["aws_internet_gateway.this"]
+#
+#  tags {
+#    Name = "${var.name}"
+#    Environment = "${var.environment}"
+#  }
+#}
 ## SUBNETS ##
+resource "aws_subnet" "public" {
+  count = "${length(var.public_subnets)}" 
+  
+  vpc_id = "${aws_vpc.this.id}"
+  availability_zone = "${element(var.azs, count.index)}"
+  cidr_block = "${element(var.public_subnets, count.index)}"
+  map_public_ip_on_launch = "${var.map_public_ip_on_launch}"
+  
+  tags {
+    Name = "${element(var.azs, count.index)}-public"
+    Environment = "${var.environment}"
+  }
+}
 
+resource "aws_subnet" "private" {
+  count = "${length(var.private_subnets)}" 
+  
+  vpc_id = "${aws_vpc.this.id}"
+  availability_zone = "${element(var.azs, count.index)}"
+  cidr_block = "${element(var.private_subnets, count.index)}"
+  
+  tags {
+    Name = "${element(var.azs, count.index)}-private"
+    Environment = "${var.environment}"
+  }
+}
