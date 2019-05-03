@@ -38,28 +38,28 @@ resource "aws_internet_gateway" "this" {
 #}
 ## SUBNETS ##
 resource "aws_subnet" "public" {
-  count = "${length(var.public_subnets)}" 
-  
-  vpc_id = "${aws_vpc.this.id}"
-  availability_zone = "${element(var.azs, count.index)}"
-  cidr_block = "${element(var.public_subnets, count.index)}"
+  count = "${length(var.public_subnets) > length(var.azs) ? length(var.public_subnets) : length(var.azs)}"
+
+  vpc_id                  = "${aws_vpc.this.id}"
+  availability_zone       = "${element(var.azs, count.index)}"
+  cidr_block              = "${element(var.public_subnets, count.index)}"
   map_public_ip_on_launch = "${var.map_public_ip_on_launch}"
-  
+
   tags {
-    Name = "${element(var.azs, count.index)}-public"
+    Name        = "${element(var.azs, count.index)}-public"
     Environment = "${var.environment}"
   }
 }
 
 resource "aws_subnet" "private" {
-  count = "${length(var.private_subnets)}" 
-  
-  vpc_id = "${aws_vpc.this.id}"
+  count = "${length(var.private_subnets) > length(var.azs) ? length(var.private_subnets) : length(var.azs)}"
+
+  vpc_id            = "${aws_vpc.this.id}"
   availability_zone = "${element(var.azs, count.index)}"
-  cidr_block = "${element(var.private_subnets, count.index)}"
-  
+  cidr_block        = "${element(var.private_subnets, count.index)}"
+
   tags {
-    Name = "${element(var.azs, count.index)}-private"
+    Name        = "${element(var.azs, count.index)}-private"
     Environment = "${var.environment}"
   }
 }

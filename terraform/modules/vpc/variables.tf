@@ -33,20 +33,20 @@ variable "assign_generated_ipv6_cidr_block" {
 
 variable "public_subnets" {
   description = "list of public subnets. CIDR blocks"
-  default = []
+  default     = []
 }
 
 variable "private_subnets" {
   description = "list of private subnets. CIDR blocks"
-  default = []
+  default     = []
 }
 
 variable "azs" {
   description = "list of availability zones in region"
-  default = []
+  default     = []
 }
 
 variable "map_public_ip_on_launch" {
   description = "determines if instances launced in subnet will be assigned a public ip. aws default is false."
-  default = "true"
+  default     = "true"
 }
